@@ -1,5 +1,5 @@
+// Здесь интерфейс доступа к веб-сервису
 package api
-
 import (
 	"net/http"
 	"log"
