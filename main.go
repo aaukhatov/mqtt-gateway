@@ -8,6 +8,7 @@ import (
 	"io"
 	"regexp"
 	"time"
+	"MqttService/api"
 )
 
 const defaultHttpPort = ":80"
@@ -18,6 +19,7 @@ func main()  {
 	httpPort := parseHttpPort(args)
 	log.Println("Web service has been started on port:", httpPort[1:])
 	http.HandleFunc("/", defaultHandler)
+	http.HandleFunc("/EnableDevice", api.EnableDevice)
 	err := http.ListenAndServe(httpPort, nil)
 	if err != nil {
 		log.Fatalf("Couldn't start web service: %v", err)
@@ -36,8 +38,8 @@ func loggerInitialize() {
 }
 
 func defaultHandler(writer http.ResponseWriter, request *http.Request) {
-	log.Println("Request: ", request)
-	fmt.Fprintf(writer, "The web-service is working by Go!")
+	log.Printf("%v %v %v", request.Proto, request.Method, request.RequestURI)
+	fmt.Fprint(writer, "The web-service is working by Go!")
 }
 
 func readCommandLineArguments() []string {
