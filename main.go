@@ -22,7 +22,7 @@ func main()  {
 }
 
 func loggerInitialize() {
-	timeSuffix := time.Now().Format("01-02")
+	timeSuffix := time.Now().Format("2006-01-02")
 	logFileName := "access-" + timeSuffix + ".log"
 	accessLogFile, err := os.OpenFile(logFileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
