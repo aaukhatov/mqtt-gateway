@@ -16,9 +16,12 @@ func main()  {
 	loggerInitialize()
 	args := readCommandLineArguments()
 	httpPort := parseHttpPort(args)
-	log.Println("Web service has been started on port", httpPort)
+	log.Println("Web service has been started on port:", httpPort[1:])
 	http.HandleFunc("/", defaultHandler)
-	http.ListenAndServe(httpPort, nil)
+	err := http.ListenAndServe(httpPort, nil)
+	if err != nil {
+		log.Fatalf("Couldn't start web service: %v", err)
+	}
 }
 
 func loggerInitialize() {
