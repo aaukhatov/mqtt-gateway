@@ -62,3 +62,7 @@ func parseHttpPort(args []string) string {
 
 	return httpPort
 }
+
+func Travis(first int, second int) int {
+	return first + second
+}

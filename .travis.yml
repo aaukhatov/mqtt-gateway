@@ -1,0 +1,8 @@
+language: go
+go:
+  - 1.8.x
+  - 1.9.x
+  - master
+go_import_path: github.com/eclipse/paho.mqtt.golang
+script:
+ - go test -v ./
