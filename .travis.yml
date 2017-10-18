@@ -4,6 +4,7 @@ go:
   - 1.9.x
 before_install:
   - go get -t github.com/eclipse/paho.mqtt.golang
+  - go get -t github.com/aukhatov/MqttService
 script:
  - go test -v ./
  - go vet ./
