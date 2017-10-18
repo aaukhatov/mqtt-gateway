@@ -6,3 +6,5 @@ before_install:
   - go get -t github.com/eclipse/paho.mqtt.golang
 script:
  - go test -v
+notifications:
+  email: false

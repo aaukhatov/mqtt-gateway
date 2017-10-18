@@ -22,7 +22,7 @@ func main()  {
 	http.HandleFunc("/EnableDevice", api.EnableDevice)
 	err := http.ListenAndServe(httpPort, nil)
 	if err != nil {
-		log.Fatalf("Couldn't start web service: %v", err)
+		log.Fatalf("Couldn't start web service. %v", err)
 	}
 }
 
