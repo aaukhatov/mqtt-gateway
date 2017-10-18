@@ -1,4 +1,7 @@
 # MqttService
+[![Build Status](https://api.travis-ci.org/aukhatov/MqttService.png?branch=master)](https://travis-ci.org/aukhatov/MqttService)
+
+## Описание
 Это легковесный веб-сервис для работы с датчиками по протоколу MQTT.
 
 ### Структура проекта

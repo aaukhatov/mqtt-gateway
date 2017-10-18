@@ -2,7 +2,8 @@ language: go
 go:
   - 1.8.x
   - 1.9.x
-go_import_path: github.com/eclipse/paho.mqtt.golang
+before_install:
+  - go get -t github.com/eclipse/paho.mqtt.golang
 script:
  - go test -v ./
  - go vet ./
