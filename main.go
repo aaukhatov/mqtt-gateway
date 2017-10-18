@@ -8,7 +8,7 @@ import (
 	"io"
 	"regexp"
 	"time"
-	"MqttService/api"
+	"github.com/aukhatov/MqttService/api"
 )
 
 const defaultHttpPort = ":80"
