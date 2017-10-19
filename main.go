@@ -8,22 +8,15 @@ import (
 	"io"
 	"regexp"
 	"time"
-	"github.com/aukhatov/MqttService/api"
+	"github.com/aukhatov/MqttService/mqtt"
 )
 
 const defaultHttpPort = ":80"
 
 func main()  {
 	loggerInitialize()
-	args := readCommandLineArguments()
-	httpPort := parseHttpPort(args)
-	log.Println("Web service has been started on port:", httpPort[1:])
-	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/EnableDevice", api.EnableDevice)
-	err := http.ListenAndServe(httpPort, nil)
-	if err != nil {
-		log.Fatalf("Couldn't start web service: %v", err)
-	}
+	log.Println("Connection test URL on tcp://192.168.1.133:1883")
+	mqtt.Test("tcp://192.168.1.133:1883")
 }
 
 func loggerInitialize() {

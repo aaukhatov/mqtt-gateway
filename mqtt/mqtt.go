@@ -7,7 +7,6 @@ import (
 	"time"
 	"log"
 	"fmt"
-	"os"
 )
 
 func connect(clientId string, uri *url.URL) mqtt.Client {
@@ -33,20 +32,24 @@ func createClientOptions(clientId string, uri *url.URL) *mqtt.ClientOptions {
 }
 
 func listen(uri *url.URL, topic string) {
+	log.Println("Try to connect")
 	client := connect("sub", uri)
+	log.Println("Connected")
 	client.Subscribe(topic, 0, func(client mqtt.Client, msg mqtt.Message) {
+		log.Println("Subscribe...")
 		fmt.Printf("* [%s] %s\n", msg.Topic(), string(msg.Payload()))
 	})
 }
 
 func Test(mqttUrl string) {
-	uri, err := url.Parse(os.Getenv(mqttUrl))
+	uri, err := url.Parse(mqttUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("URL parsed", uri)
 	topic := uri.Path[1:len(uri.Path)]
 	if topic == "" {
-		topic = "test"
+		topic = "linoxide/topic"
 	}
 
 	go listen(uri, topic)
