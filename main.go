@@ -16,7 +16,7 @@ const defaultHttpPort = ":80"
 func main()  {
 	loggerInitialize()
 	log.Println("Connection test URL on tcp://192.168.1.133:1883")
-	mqtt.Test("tcp://192.168.1.133:1883")
+	mqtt.Test("tcp://mqtt-spy:123@192.168.1.133:1883/ESP8266/DATA")
 }
 
 func loggerInitialize() {
