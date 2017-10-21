@@ -7,7 +7,6 @@ import (
 	"time"
 	"log"
 	"fmt"
-	"os"
 )
 
 func connect(clientId string, uri *url.URL) mqtt.Client {
@@ -39,20 +38,24 @@ func listen(uri *url.URL, topic string) {
 	})
 }
 
+// Some connection testing method
 func Test(mqttUrl string) {
-	uri, err := url.Parse(os.Getenv(mqttUrl))
+	uri, err := url.Parse(mqttUrl)
+
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Couldn't parse URI", err)
 	}
+
 	topic := uri.Path[1:len(uri.Path)]
 	if topic == "" {
-		topic = "test"
+		log.Fatalln("Topic is empty!")
 	}
 
 	go listen(uri, topic)
 
 	client := connect("pub", uri)
 	timer := time.NewTicker(1 * time.Second)
+
 	for t := range timer.C {
 		client.Publish(topic, 0, false, t.String())
 	}
