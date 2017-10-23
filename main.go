@@ -18,23 +18,23 @@ func main()  {
 	loggerInitialize()
 	args := readCommandLineArguments()
 	httpPort := parseHttpPort(args)
-	var app App
-	app.Run(httpPort)
+	var rest RestService
+	rest.Run(httpPort)
 }
 
-type App struct {
+type RestService struct {
 	Router *mux.Router
 }
 
-func (a *App) Run(httpPort string) {
+func (rest *RestService) Run(httpPort string) {
 	// обработчики
-	a.Router = mux.NewRouter().StrictSlash(true)
+	rest.Router = mux.NewRouter().StrictSlash(true)
 	// home controller
-	a.Router.HandleFunc("/", defaultHandler).Methods("GET")
+	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
 	// отправка SMS
-	a.Router.HandleFunc("/sendSms", api.SendSms).Methods("POST")
+	rest.Router.HandleFunc("/sendSms", api.SendSms).Methods("POST")
 	// запуск веб-сервиса
-	err := http.ListenAndServe(httpPort, a.Router)
+	err := http.ListenAndServe(httpPort, rest.Router)
 	log.Println("Web service has been started on port", httpPort[1:])
 	if err != nil {
 		log.Fatalf("Couldn't start web service. %v", err)
