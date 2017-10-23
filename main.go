@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"time"
 	"github.com/aukhatov/MqttService/api"
+	"github.com/gorilla/mux"
 )
 
 const defaultHttpPort = ":80"
@@ -17,14 +18,29 @@ func main()  {
 	loggerInitialize()
 	args := readCommandLineArguments()
 	httpPort := parseHttpPort(args)
-	log.Println("Web service has been started on port:", httpPort[1:])
-	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/EnableDevice", api.EnableDevice)
-	err := http.ListenAndServe(httpPort, nil)
+	var app App
+	app.Run(httpPort)
+}
+
+type App struct {
+	Router *mux.Router
+}
+
+func (a *App) Run(httpPort string) {
+	// обработчики
+	a.Router = mux.NewRouter().StrictSlash(true)
+	// home controller
+	a.Router.HandleFunc("/", defaultHandler).Methods("GET")
+	// отправка SMS
+	a.Router.HandleFunc("/sendSms", api.SendSms).Methods("POST")
+	// запуск веб-сервиса
+	err := http.ListenAndServe(httpPort, a.Router)
+	log.Println("Web service has been started on port", httpPort[1:])
 	if err != nil {
 		log.Fatalf("Couldn't start web service. %v", err)
 	}
 }
+
 
 func loggerInitialize() {
 	timeSuffix := time.Now().Format("2006-01-02")
@@ -37,6 +53,7 @@ func loggerInitialize() {
 	log.SetOutput(multiWriter)
 }
 
+// Ничего не делает. Приветственная страница.
 func defaultHandler(writer http.ResponseWriter, request *http.Request) {
 	log.Printf("%v %v %v", request.Proto, request.Method, request.RequestURI)
 	fmt.Fprint(writer, "The web-service is working by Go!")
@@ -49,17 +66,15 @@ func readCommandLineArguments() []string {
 
 func parseHttpPort(args []string) string {
 	var httpPort = defaultHttpPort
-	var argumentPattern = "--http.port="
-	var valueStartIndex = 12
+	var argumentPattern = "port="
+	var valueStartIndex = 5
 
 	for _, entry := range args {
 		found, _ := regexp.MatchString(argumentPattern, entry)
 		if found {
 			httpPort = ":" + entry[valueStartIndex:]
 		}
-
 	}
-
 	return httpPort
 }
 
