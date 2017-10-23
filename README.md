@@ -31,5 +31,5 @@ go install
 На текущий момент можно передать один аргумент, это порт на котором будет запущен веб-сервис
 
 ```bash
-~/go/bin/MqttService --http.port=8080
+~/go/bin/MqttService port=8080
 ```
