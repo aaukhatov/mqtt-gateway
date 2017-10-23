@@ -41,7 +41,6 @@ func (rest *RestService) Run(httpPort string) {
 	}
 }
 
-
 func loggerInitialize() {
 	timeSuffix := time.Now().Format("2006-01-02")
 	logFileName := "access-" + timeSuffix + ".log"
@@ -76,8 +75,4 @@ func parseHttpPort(args []string) string {
 		}
 	}
 	return httpPort
-}
-
-func Travis(first int, second int) int {
-	return first + second
 }
