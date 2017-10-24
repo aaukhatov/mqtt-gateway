@@ -29,16 +29,20 @@ type RestService struct {
 func (rest *RestService) Run(httpPort string) {
 	// обработчики
 	rest.Router = mux.NewRouter().StrictSlash(true)
+	defineHandlers(rest)
+	// запуск веб-сервиса
+	log.Println("Web service has been started on port", httpPort[1:])
+	err := http.ListenAndServe(httpPort, rest.Router)
+	if err != nil {
+		log.Fatalf("Couldn't start web service. %v", err)
+	}
+}
+
+func defineHandlers(rest *RestService) {
 	// home controller
 	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
 	// отправка SMS
 	rest.Router.HandleFunc("/sendSms", api.SendSms).Methods("POST")
-	// запуск веб-сервиса
-	err := http.ListenAndServe(httpPort, rest.Router)
-	log.Println("Web service has been started on port", httpPort[1:])
-	if err != nil {
-		log.Fatalf("Couldn't start web service. %v", err)
-	}
 }
 
 func loggerInitialize() {
