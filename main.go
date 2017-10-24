@@ -8,7 +8,7 @@ import (
 	"io"
 	"regexp"
 	"time"
-	"github.com/aukhatov/MqttService/api"
+	"github.com/aukhatov/mqtt-gateway/api"
 	"github.com/gorilla/mux"
 )
 

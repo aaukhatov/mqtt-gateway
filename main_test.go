@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http/httptest"
-	"github.com/aukhatov/MqttService/api"
+	"github.com/aukhatov/mqtt-gateway/api"
 )
 
 func TestSendSms(t *testing.T) {
