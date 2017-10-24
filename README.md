@@ -1,5 +1,5 @@
-# MqttService
-[![Build Status](https://api.travis-ci.org/aukhatov/MqttService.png?branch=master)](https://travis-ci.org/aukhatov/MqttService)
+# mqtt-gateway
+[![Build Status](https://travis-ci.org/aukhatov/mqtt-gateway.svg?branch=test)](https://travis-ci.org/aukhatov/mqtt-gateway)
 
 ## Описание
 Это легковесный веб-сервис для работы с датчиками по протоколу MQTT.
@@ -14,7 +14,7 @@
 
 Выполнить команду go get для клонирования проекта
 ```bash
-go get github.com/aukhatov/MqttService
+go get github.com/aukhatov/mqtt-gateway
 ```
 
 #### Компиляция
@@ -27,9 +27,9 @@ go install
 
 #### Запуск
 
-Этап компиляции создаст бинарный файл ~/go/bin/MqttService
+Этап компиляции создаст бинарный файл ~/go/bin/mqtt-gateway
 На текущий момент можно передать один аргумент, это порт на котором будет запущен веб-сервис
 
 ```bash
-~/go/bin/MqttService --http.port=8080
+~/go/bin/mqtt-gateway port=8080
 ```
