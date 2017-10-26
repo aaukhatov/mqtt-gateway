@@ -19,7 +19,7 @@ func SendSms(writer http.ResponseWriter, request *http.Request) {
 	buildHttpHeader201(writer)
 	//для демонстрации ответ упаковываем в json
 	response, err := json.Marshal(smsRequest)
-	fmt.Fprintf(writer, "Received request: %v", string(response))
+	fmt.Fprintf(writer, string(response))
 }
 
 func buildHttpHeader201(writer http.ResponseWriter) {
