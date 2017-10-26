@@ -4,7 +4,6 @@ import (
 	"testing"
 	"net/http"
 	"bytes"
-	"fmt"
 	"net/http/httptest"
 	"github.com/aukhatov/mqtt-gateway/api"
 )
@@ -15,5 +14,8 @@ func TestSendSms(t *testing.T) {
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(api.SendSms)
 	handler.ServeHTTP(rr, req)
-	fmt.Println(rr.Body)
+
+	if rr.Code != http.StatusCreated {
+		t.Failed()
+	}
 }
