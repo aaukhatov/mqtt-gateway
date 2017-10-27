@@ -42,7 +42,7 @@ func defineHandlers(rest *RestService) {
 	// home controller
 	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
 	// отправка SMS
-	rest.Router.HandleFunc("/sendSms", api.SendSms).Methods("POST")
+	rest.Router.HandleFunc("/sms", api.SendSms).Methods("POST")
 }
 
 func loggerInitialize() {
