@@ -10,7 +10,7 @@ import (
 
 func TestSendSms(t *testing.T) {
 	requestPayload := []byte(`{"number": "8-800", "text": "super code 666", "receipt": false}`)
-	req, _ := http.NewRequest("POST", "/sendSms", bytes.NewBuffer(requestPayload))
+	req, _ := http.NewRequest("POST", "/sms", bytes.NewBuffer(requestPayload))
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(api.SendSms)
 	handler.ServeHTTP(rr, req)
