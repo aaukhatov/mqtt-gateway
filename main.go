@@ -8,7 +8,8 @@ import (
 	"io"
 	"regexp"
 	"time"
-	"github.com/aukhatov/MqttService/api"
+	"github.com/aukhatov/mqtt-gateway/api"
+	"github.com/gorilla/mux"
 )
 
 const defaultHttpPort = ":80"
@@ -17,13 +18,31 @@ func main()  {
 	loggerInitialize()
 	args := readCommandLineArguments()
 	httpPort := parseHttpPort(args)
-	log.Println("Web service has been started on port:", httpPort[1:])
-	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/EnableDevice", api.EnableDevice)
-	err := http.ListenAndServe(httpPort, nil)
+	var rest RestService
+	rest.Run(httpPort)
+}
+
+type RestService struct {
+	Router *mux.Router
+}
+
+func (rest *RestService) Run(httpPort string) {
+	// обработчики
+	rest.Router = mux.NewRouter().StrictSlash(true)
+	defineHandlers(rest)
+	// запуск веб-сервиса
+	log.Println("Web service has been started on port", httpPort[1:])
+	err := http.ListenAndServe(httpPort, rest.Router)
 	if err != nil {
 		log.Fatalf("Couldn't start web service. %v", err)
 	}
+}
+
+func defineHandlers(rest *RestService) {
+	// home controller
+	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
+	// отправка SMS
+	rest.Router.HandleFunc("/sms", api.SendSms).Methods("POST")
 }
 
 func loggerInitialize() {
@@ -37,6 +56,7 @@ func loggerInitialize() {
 	log.SetOutput(multiWriter)
 }
 
+// Ничего не делает. Приветственная страница.
 func defaultHandler(writer http.ResponseWriter, request *http.Request) {
 	log.Printf("%v %v %v", request.Proto, request.Method, request.RequestURI)
 	fmt.Fprint(writer, "The web-service is working by Go!")
@@ -49,20 +69,14 @@ func readCommandLineArguments() []string {
 
 func parseHttpPort(args []string) string {
 	var httpPort = defaultHttpPort
-	var argumentPattern = "--http.port="
-	var valueStartIndex = 12
+	var argumentPattern = "port="
+	var valueStartIndex = 5
 
 	for _, entry := range args {
 		found, _ := regexp.MatchString(argumentPattern, entry)
 		if found {
 			httpPort = ":" + entry[valueStartIndex:]
 		}
-
 	}
-
 	return httpPort
-}
-
-func Travis(first int, second int) int {
-	return first + second
 }
