@@ -41,8 +41,9 @@ func (rest *RestService) Run(httpPort string) {
 func defineHandlers(rest *RestService) {
 	// home controller
 	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
-	// отправка SMS
-	rest.Router.HandleFunc("/sms", api.SendSms).Methods("POST")
+
+	rest.Router.HandleFunc("/esp", api.GetEspList).Methods("GET")
+	rest.Router.HandleFunc("/esp", api.SendMessage).Methods("POST")
 }
 
 func loggerInitialize() {

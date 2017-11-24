@@ -8,11 +8,11 @@ import (
 	"github.com/aukhatov/mqtt-gateway/api"
 )
 
-func TestSendSms(t *testing.T) {
+func TestSendMessage(t *testing.T) {
 	requestPayload := []byte(`{"number": "8-800", "text": "super code 666", "receipt": false}`)
-	req, _ := http.NewRequest("POST", "/sms", bytes.NewBuffer(requestPayload))
+	req, _ := http.NewRequest("POST", "/esp", bytes.NewBuffer(requestPayload))
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(api.SendSms)
+	handler := http.HandlerFunc(api.SendMessage)
 	handler.ServeHTTP(rr, req)
 
 	if rr.Code != http.StatusCreated {
