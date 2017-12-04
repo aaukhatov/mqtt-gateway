@@ -38,11 +38,11 @@ func createClientOptions(clientId string, uri *url.URL) *mqtt.ClientOptions {
 
 func Listen(mqttUrl string, topic string) {
 	client := Connect("sub", mqttUrl)
-	token := client.Subscribe(topic, 0, func(client mqtt.Client, msg mqtt.Message) {
-		fmt.Printf("* [%s] %s\n", msg.Topic(), string(msg.Payload()))
-	})
-	for !token.WaitTimeout(1 * time.Second) {}
-	if err := token.Error(); err != nil {
-		log.Fatal(err)
+	for {
+		client.Subscribe(topic, 0, printOut)
 	}
+}
+
+func printOut(client mqtt.Client, msg mqtt.Message) {
+	fmt.Printf("* [%s] %s\n", msg.Topic(), string(msg.Payload()))
 }
