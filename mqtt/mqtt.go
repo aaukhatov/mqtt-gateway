@@ -8,8 +8,13 @@ import (
 	"log"
 	"fmt"
 )
-
-func connect(clientId string, uri *url.URL) mqtt.Client {
+// clientId - sub is subscribe
+// clientId - pub is publish
+func Connect(clientId string, mqttUrl string) mqtt.Client {
+	uri, err := url.Parse(mqttUrl)
+	if err != nil {
+		log.Fatal("Couldn't parse URI", err)
+	}
 	opts := createClientOptions(clientId, uri)
 	client := mqtt.NewClient(opts)
 	token := client.Connect()
@@ -31,32 +36,13 @@ func createClientOptions(clientId string, uri *url.URL) *mqtt.ClientOptions {
 	return opts
 }
 
-func listen(uri *url.URL, topic string) {
-	client := connect("sub", uri)
-	client.Subscribe(topic, 0, func(client mqtt.Client, msg mqtt.Message) {
+func Listen(mqttUrl string, topic string) {
+	client := Connect("sub", mqttUrl)
+	token := client.Subscribe(topic, 0, func(client mqtt.Client, msg mqtt.Message) {
 		fmt.Printf("* [%s] %s\n", msg.Topic(), string(msg.Payload()))
 	})
-}
-
-// Some connection testing method
-func Test(mqttUrl string) {
-	uri, err := url.Parse(mqttUrl)
-
-	if err != nil {
-		log.Fatal("Couldn't parse URI", err)
-	}
-
-	topic := uri.Path[1:len(uri.Path)]
-	if topic == "" {
-		log.Fatalln("Topic is empty!")
-	}
-
-	go listen(uri, topic)
-
-	client := connect("pub", uri)
-	timer := time.NewTicker(1 * time.Second)
-
-	for t := range timer.C {
-		client.Publish(topic, 0, false, t.String())
+	for !token.WaitTimeout(1 * time.Second) {}
+	if err := token.Error(); err != nil {
+		log.Fatal(err)
 	}
 }
