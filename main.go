@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"time"
 	"github.com/aukhatov/mqtt-gateway/api"
+	"github.com/aukhatov/mqtt-gateway/mqtt"
 	"github.com/gorilla/mux"
 )
 
@@ -16,10 +17,12 @@ const defaultHttpPort = ":80"
 
 func main()  {
 	loggerInitialize()
-	args := readCommandLineArguments()
-	httpPort := parseHttpPort(args)
-	var rest RestService
-	rest.Run(httpPort)
+	//args := readCommandLineArguments()
+	//httpPort := parseHttpPort(args)
+	//var rest RestService
+	//rest.Run(httpPort)
+	// должен выводить сообщение в stdout
+	mqtt.Listen("tcp://mqtt-spy:123@192.168.1.133:1883/", "/ESP/+/DATA/#")
 }
 
 type RestService struct {
@@ -41,8 +44,9 @@ func (rest *RestService) Run(httpPort string) {
 func defineHandlers(rest *RestService) {
 	// home controller
 	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
-	// отправка SMS
-	rest.Router.HandleFunc("/sms", api.SendSms).Methods("POST")
+
+	rest.Router.HandleFunc("/esp", api.GetEspList).Methods("GET")
+	rest.Router.HandleFunc("/esp", api.SendMessage).Methods("POST")
 }
 
 func loggerInitialize() {
