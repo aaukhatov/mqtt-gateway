@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
 	"log"
 	"os"
@@ -14,15 +14,15 @@ import (
 )
 
 const defaultHttpPort = ":80"
+const MQTT_URL = "tcp://mqtt-spy:123@192.168.1.133:1883/"
+const ESP_API = "/ESP/"
 
 func main()  {
 	loggerInitialize()
-	//args := readCommandLineArguments()
-	//httpPort := parseHttpPort(args)
-	//var rest RestService
-	//rest.Run(httpPort)
-	// должен выводить сообщение в stdout
-	mqtt.Listen("tcp://mqtt-spy:123@192.168.1.133:1883/", "/ESP/+/DATA/#")
+	args := readCommandLineArguments()
+	httpPort := parseHttpPort(args)
+	var rest RestService
+	rest.Run(httpPort)
 }
 
 type RestService struct {
@@ -46,7 +46,7 @@ func defineHandlers(rest *RestService) {
 	rest.Router.HandleFunc("/", defaultHandler).Methods("GET")
 
 	rest.Router.HandleFunc("/esp", api.GetEspList).Methods("GET")
-	rest.Router.HandleFunc("/esp", api.SendMessage).Methods("POST")
+	rest.Router.HandleFunc("/esp/{chipId:[0-9]+}", api.LedOnOff).Methods("POST")
 }
 
 func loggerInitialize() {
@@ -63,7 +63,14 @@ func loggerInitialize() {
 // Ничего не делает. Приветственная страница.
 func defaultHandler(writer http.ResponseWriter, request *http.Request) {
 	log.Printf("%v %v %v", request.Proto, request.Method, request.RequestURI)
-	fmt.Fprint(writer, "The web-service is working by Go!")
+}
+
+func viewTemplate(writer http.ResponseWriter) {
+	tmpl, err := template.ParseFiles("template/index.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmpl.Execute(writer, nil)
 }
 
 func readCommandLineArguments() []string {

@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"net/http/httptest"
 	"github.com/aukhatov/mqtt-gateway/api"
+	"github.com/gorilla/mux"
 )
 
 func TestSendMessage(t *testing.T) {
