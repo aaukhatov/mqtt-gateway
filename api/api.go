@@ -42,12 +42,10 @@ func LedOnOff(writer http.ResponseWriter, request *http.Request) {
 		respondWithError(writer, http.StatusBadRequest, "Invalid chipId")
 		return
 	}
-	log.Println("Parsed chipId:", chipId)
-	log.Println("Payload:", payload)
 	client := mqtt.Connect("pub", MQTT_URL)
 	topic := fmt.Sprintf("/ESP/%d/CONTROL/LED", chipId)
-	log.Println("Send to", topic)
-	client.Publish(topic, 0, false, payload).WaitTimeout(time.Second * 2)
+	log.Printf("Send %s to %s", payload, topic)
+	client.Publish(topic, 0, false, payload.Data).WaitTimeout(time.Second * 2)
 	buildHttpHeader201(writer)
 	response, err := json.Marshal(payload)
 	fmt.Fprintf(writer, string(response))
