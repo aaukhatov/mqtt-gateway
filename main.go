@@ -9,7 +9,6 @@ import (
 	"regexp"
 	"time"
 	"github.com/aukhatov/mqtt-gateway/api"
-	"github.com/aukhatov/mqtt-gateway/mqtt"
 	"github.com/gorilla/mux"
 )
 
